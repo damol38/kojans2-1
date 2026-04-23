@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>한글샘 — 우리 반 공부방</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #6cb4f0;
+  --sky-light: #c5e3f7;
+  --sun: #ffd45e;
+  --sun-deep: #f5b800;
+  --grass: #8bc97a;
+  --grass-deep: #5fa648;
+  --pink: #ff9bb3;
+  --pink-deep: #f06d8e;
+  --purple: #b89ce0;
+  --orange: #ffa666;
+  --cream: #fff8e8;
+  --paper: #fffcf3;
+  --ink: #3d3528;
+  --ink-soft: #6b6151;
+  --shadow: 0 4px 0 rgba(0,0,0,0.08), 0 8px 20px rgba(60,40,20,0.1);
+  --shadow-pop: 0 6px 0 rgba(0,0,0,0.1), 0 12px 28px rgba(60,40,20,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Gowun Dodum', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(108,180,240,0.15) 0%, transparent 30%),
+    radial-gradient(circle at 90% 80%, rgba(255,212,94,0.18) 0%, transparent 30%);
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.container { max-width: 720px; margin: 0 auto; padding: 16px; position: relative; z-index: 1; }
+
+/* ========= 로그인 ========= */
+.login-screen {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 100vh; text-align: center; padding: 20px;
+}
+.login-character {
+  font-family: 'Jua', sans-serif; font-size: 110px;
+  background: white; width: 180px; height: 180px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-pop); margin-bottom: 24px;
+  border: 6px solid var(--sun);
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.login-title {
+  font-family: 'Jua', sans-serif; font-size: 38px; color: var(--ink);
+  margin-bottom: 8px;
+}
+.login-title .accent { color: var(--pink-deep); }
+.login-subtitle { font-size: 18px; color: var(--ink-soft); margin-bottom: 36px; }
+
+.login-form {
+  background: white; border-radius: 24px; padding: 28px;
+  box-shadow: var(--shadow); width: 100%; max-width: 360px;
+  border: 4px solid var(--sky-light);
+}
+.login-form label {
+  display: block; font-size: 18px; font-weight: 700;
+  color: var(--ink); margin-bottom: 8px; text-align: left;
+}
+.login-form input {
+  width: 100%; padding: 14px 18px;
+  border: 3px solid var(--sky-light); border-radius: 16px;
+  font-family: 'Gowun Dodum', sans-serif; font-size: 20px;
+  background: var(--paper); color: var(--ink); margin-bottom: 16px;
+  text-align: center;
+}
+.login-form input:focus { outline: none; border-color: var(--sky); background: white; }
+
+.big-button {
+  display: inline-block; padding: 16px 32px;
+  background: var(--pink-deep); color: white; border: none;
+  border-radius: 20px; font-family: 'Jua', sans-serif;
+  font-size: 22px; cursor: pointer;
+  box-shadow: var(--shadow); transition: all 0.15s;
+  width: 100%;
+}
+.big-button:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.08); }
+.big-button.green { background: var(--grass-deep); }
+.big-button.sky { background: var(--sky); }
+.big-button.sun { background: var(--sun-deep); color: var(--ink); }
+.big-button.purple { background: var(--purple); }
+
+.login-error {
+  background: var(--pink); color: white;
+  padding: 10px; border-radius: 12px; margin-top: 12px;
+  font-size: 14px; display: none;
+}
+
+/* ========= 헤더 (메인 화면) ========= */
+.app-header {
+  background: white; border-radius: 20px; padding: 16px 20px;
+  box-shadow: var(--shadow); margin-bottom: 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  border: 3px solid var(--sky-light);
+}
+.app-header-left { display: flex; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 48px; height: 48px; background: var(--sun);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: 'Jua', sans-serif; font-size: 24px;
+  border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.user-greeting { font-size: 13px; color: var(--ink-soft); }
+.user-name { font-family: 'Jua', sans-serif; font-size: 18px; color: var(--ink); }
+.star-counter {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--sun); padding: 8px 14px;
+  border-radius: 20px; font-family: 'Jua', sans-serif; font-size: 18px;
+  border: 2px solid white; box-shadow: 0 2px 8px rgba(245,184,0,0.3);
+}
+
+.logout-btn {
+  background: transparent; color: var(--ink-soft);
+  border: 2px solid var(--sky-light); border-radius: 12px;
+  padding: 6px 12px; font-size: 12px; cursor: pointer;
+  font-family: 'Gowun Dodum', sans-serif;
+}
+
+/* ========= 메인 화면 카드 ========= */
+.welcome-card {
+  background: linear-gradient(135deg, var(--sky-light) 0%, #e8d4f0 100%);
+  border-radius: 24px; padding: 24px;
+  text-align: center; margin-bottom: 20px;
+  border: 4px solid white;
+  box-shadow: var(--shadow);
+}
+.welcome-emoji { font-size: 56px; margin-bottom: 8px; display: block; }
+.welcome-text {
+  font-family: 'Jua', sans-serif; font-size: 22px; color: var(--ink);
+}
+.welcome-sub { font-size: 14px; color: var(--ink-soft); margin-top: 6px; }
+
+/* ========= 메뉴 그리드 ========= */
+.menu-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-bottom: 20px;
+}
+.menu-card {
+  background: white; border-radius: 20px; padding: 24px 16px;
+  text-align: center; cursor: pointer;
+  box-shadow: var(--shadow); transition: all 0.2s;
+  border: 4px solid white;
+  position: relative; overflow: hidden;
+}
+.menu-card:active { transform: scale(0.96); }
+.menu-card.dictation { border-color: var(--sun); }
+.menu-card.diary { border-color: var(--pink); }
+.menu-card.book { border-color: var(--grass); }
+.menu-card.vocab { border-color: var(--purple); }
+.menu-card.record { border-color: var(--sky); }
+.menu-card.textbook { border-color: var(--orange); }
+
+.menu-icon {
+  font-family: 'Jua', sans-serif; font-size: 56px;
+  margin-bottom: 8px; line-height: 1;
+}
+.menu-title {
+  font-family: 'Jua', sans-serif; font-size: 18px; color: var(--ink);
+  margin-bottom: 4px;
+}
+.menu-desc { font-size: 12px; color: var(--ink-soft); }
+
+/* ========= 상세 화면 ========= */
+.screen { display: none; animation: slideUp 0.3s ease; }
+.screen.active { display: block; }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.back-btn {
+  background: white; color: var(--ink);
+  border: 3px solid var(--sky-light); border-radius: 14px;
+  padding: 10px 16px; font-family: 'Jua', sans-serif; font-size: 16px;
+  cursor: pointer; margin-bottom: 16px;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+}
+
+.screen-title {
+  font-family: 'Jua', sans-serif; font-size: 28px;
+  color: var(--ink); margin-bottom: 8px; text-align: center;
+}
+.screen-subtitle {
+  font-size: 14px; color: var(--ink-soft);
+  text-align: center; margin-bottom: 20px;
+}
+
+.upload-card {
+  background: white; border-radius: 20px; padding: 24px;
+  box-shadow: var(--shadow); margin-bottom: 16px;
+  border: 4px solid white;
+}
+
+.form-field { margin-bottom: 16px; }
+.form-field label {
+  display: block; font-family: 'Jua', sans-serif; font-size: 16px;
+  color: var(--ink); margin-bottom: 8px;
+}
+.form-field input, .form-field select, .form-field textarea {
+  width: 100%; padding: 14px 16px;
+  border: 3px solid var(--sky-light); border-radius: 14px;
+  font-family: 'Gowun Dodum', sans-serif; font-size: 17px;
+  background: var(--paper); color: var(--ink);
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+  outline: none; border-color: var(--sky); background: white;
+}
+
+/* 카메라 버튼 */
+.camera-area {
+  background: linear-gradient(135deg, #fff5e0 0%, #ffe8d0 100%);
+  border: 3px dashed var(--sun-deep); border-radius: 20px;
+  padding: 32px 16px; text-align: center; cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+.camera-area:active { transform: scale(0.98); }
+.camera-area.has-photo {
+  background: white; border-style: solid; border-color: var(--grass);
+  padding: 16px;
+}
+.camera-icon {
+  font-family: 'Jua', sans-serif; font-size: 80px;
+  color: var(--sun-deep); line-height: 1;
+}
+.camera-text {
+  font-family: 'Jua', sans-serif; font-size: 18px;
+  color: var(--ink); margin-top: 8px;
+}
+.camera-hint { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+.camera-area input[type="file"] { display: none; }
+
+.photo-preview {
+  max-width: 100%; max-height: 280px;
+  border-radius: 12px; box-shadow: var(--shadow);
+}
+.photo-info {
+  font-size: 13px; color: var(--grass-deep);
+  font-family: 'Jua', sans-serif; margin-top: 8px;
+}
+
+/* 성공 화면 */
+.success-screen {
+  display: none; text-align: center; padding: 40px 20px;
+  background: white; border-radius: 24px; box-shadow: var(--shadow-pop);
+  border: 4px solid var(--grass);
+}
+.success-screen.active { display: block; animation: pop 0.4s ease; }
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.success-icon {
+  font-family: 'Jua', sans-serif; font-size: 100px;
+  color: var(--grass-deep); margin-bottom: 12px;
+}
+.success-title {
+  font-family: 'Jua', sans-serif; font-size: 30px;
+  color: var(--ink); margin-bottom: 8px;
+}
+.success-message { font-size: 16px; color: var(--ink-soft); margin-bottom: 16px; }
+.stars-earned {
+  font-family: 'Jua', sans-serif; font-size: 24px;
+  color: var(--sun-deep); margin: 16px 0;
+}
+
+/* 어휘 게임 */
+.vocab-menu {
+  display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px;
+}
+.vocab-game-card {
+  background: white; border-radius: 18px; padding: 18px 20px;
+  box-shadow: var(--shadow); cursor: pointer;
+  border: 4px solid white; transition: all 0.2s;
+  display: flex; align-items: center; gap: 16px;
+}
+.vocab-game-card:active { transform: scale(0.97); }
+.vocab-game-card.g1 { border-color: var(--sun); }
+.vocab-game-card.g2 { border-color: var(--pink); }
+.vocab-game-card.g3 { border-color: var(--grass); }
+.vocab-game-card.g4 { border-color: var(--purple); }
+
+.vocab-game-icon {
+  font-family: 'Jua', sans-serif; font-size: 40px;
+  width: 60px; height: 60px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream); flex-shrink: 0;
+}
+.vocab-game-info { flex: 1; }
+.vocab-game-title {
+  font-family: 'Jua', sans-serif; font-size: 18px;
+  color: var(--ink); margin-bottom: 2px;
+}
+.vocab-game-desc { font-size: 13px; color: var(--ink-soft); }
+.vocab-game-arrow {
+  font-family: 'Jua', sans-serif; font-size: 24px; color: var(--ink-soft);
+}
+
+/* 게임 진행 화면 */
+.game-progress {
+  background: white; border-radius: 16px; padding: 12px 20px;
+  margin-bottom: 16px; display: flex; justify-content: space-between;
+  align-items: center; box-shadow: var(--shadow);
+  border: 3px solid var(--sky-light);
+}
+.game-counter { font-family: 'Jua', sans-serif; font-size: 18px; color: var(--ink); }
+.game-score { font-family: 'Jua', sans-serif; font-size: 18px; color: var(--sun-deep); }
+
+.question-card {
+  background: white; border-radius: 24px; padding: 32px 24px;
+  box-shadow: var(--shadow-pop); margin-bottom: 16px;
+  text-align: center; border: 4px solid var(--sky-light);
+}
+.question-label {
+  font-family: 'Jua', sans-serif; font-size: 14px;
+  color: var(--ink-soft); margin-bottom: 8px;
+}
+.question-text {
+  font-family: 'Jua', sans-serif; font-size: 32px;
+  color: var(--ink); margin-bottom: 8px; line-height: 1.4;
+}
+.question-hint {
+  font-size: 16px; color: var(--ink-soft); margin-top: 12px;
+  background: var(--cream); padding: 10px 16px; border-radius: 12px;
+  display: inline-block;
+}
+
+.choices {
+  display: grid; gap: 12px; margin-top: 16px;
+}
+.choice-btn {
+  background: white; color: var(--ink);
+  border: 3px solid var(--sky-light); border-radius: 16px;
+  padding: 16px; font-family: 'Gowun Dodum', sans-serif; font-size: 18px;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.06);
+  text-align: center;
+}
+.choice-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.06); }
+.choice-btn.correct { background: var(--grass); color: white; border-color: var(--grass-deep); }
+.choice-btn.wrong { background: var(--pink); color: white; border-color: var(--pink-deep); }
+.choice-btn:disabled { cursor: default; }
+
+.feedback {
+  text-align: center; padding: 16px; border-radius: 16px;
+  margin-top: 12px; font-family: 'Jua', sans-serif; font-size: 22px;
+  display: none;
+}
+.feedback.show { display: block; animation: pop 0.3s ease; }
+.feedback.correct { background: var(--grass); color: white; }
+.feedback.wrong { background: var(--pink); color: white; }
+
+/* 내 기록 */
+.record-card {
+  background: white; border-radius: 18px; padding: 18px 20px;
+  margin-bottom: 12px; box-shadow: var(--shadow);
+  border: 3px solid white; display: flex; align-items: center; gap: 14px;
+}
+.record-icon {
+  font-family: 'Jua', sans-serif; font-size: 28px;
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream); flex-shrink: 0;
+}
+.record-info { flex: 1; }
+.record-title { font-family: 'Jua', sans-serif; font-size: 16px; color: var(--ink); }
+.record-meta { font-size: 13px; color: var(--ink-soft); }
+.record-stars {
+  font-family: 'Jua', sans-serif; color: var(--sun-deep);
+  font-size: 16px;
+}
+
+.record-stats {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+  margin-bottom: 20px;
+}
+.record-stat {
+  background: white; border-radius: 16px; padding: 16px 8px;
+  text-align: center; box-shadow: var(--shadow);
+  border: 3px solid white;
+}
+.record-stat.gold { border-color: var(--sun); }
+.record-stat.pink { border-color: var(--pink); }
+.record-stat.grass { border-color: var(--grass); }
+.record-stat-num {
+  font-family: 'Jua', sans-serif; font-size: 28px; color: var(--ink);
+  line-height: 1;
+}
+.record-stat-label { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+
+/* 로딩 */
+.loading {
+  text-align: center; padding: 30px;
+  font-family: 'Jua', sans-serif; font-size: 18px; color: var(--ink-soft);
+}
+.loading::after {
+  content: ''; display: inline-block; width: 20px;
+  animation: dots 1.5s infinite;
+}
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+.empty-record {
+  text-align: center; padding: 40px 20px;
+  color: var(--ink-soft); background: white; border-radius: 20px;
+  border: 3px dashed var(--sky-light);
+}
+.empty-record-icon { font-family: 'Jua', sans-serif; font-size: 60px; color: var(--sky-light); margin-bottom: 12px; }
+
+/* 설정 알림 */
+.setup-notice {
+  background: var(--pink); color: white;
+  padding: 14px 18px; border-radius: 14px;
+  font-size: 14px; margin-bottom: 16px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<!-- ============== 로그인 화면 ============== -->
+<div id="loginScreen" class="container login-screen">
+  <div class="login-character">한</div>
+  <div class="login-title">한글<span class="accent">샘</span> 공부방</div>
+  <div class="login-subtitle">우리 반 친구들이 함께 공부해요!</div>
+
+  <div class="login-form">
+    <label>학년 · 반 · 번호</label>
+    <input type="number" id="loginNumber" placeholder="번호를 적어요" min="1" max="40">
+    <label>이름</label>
+    <input type="text" id="loginName" placeholder="이름을 적어요">
+    <button class="big-button" onclick="doLogin()">공부방에 들어가요!</button>
+    <div id="loginError" class="login-error"></div>
+  </div>
+
+  <div style="margin-top: 24px; font-size: 12px; color: var(--ink-soft);">
+    선생님께 미리 등록을 부탁드려요
+  </div>
+</div>
+
+<!-- ============== 메인 앱 ============== -->
+<div id="mainApp" class="container" style="display:none;">
+
+  <!-- 헤더 -->
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="user-avatar" id="userAvatar">○</div>
+      <div>
+        <div class="user-greeting">안녕!</div>
+        <div class="user-name" id="userName">—</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div class="star-counter">
+        <span style="font-family:'Jua';">★</span>
+        <span id="starCount">0</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">나가기</button>
+    </div>
+  </header>
+
+  <!-- 홈 화면 -->
+  <div class="screen active" id="homeScreen">
+    <div class="welcome-card">
+      <span class="welcome-emoji" id="welcomeEmoji">○</span>
+      <div class="welcome-text" id="welcomeText">오늘은 무엇을 해볼까?</div>
+      <div class="welcome-sub">아래에서 골라봐요</div>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-card dictation" onclick="goScreen('uploadScreen','dictation')">
+        <div class="menu-icon">字</div>
+        <div class="menu-title">받아쓰기</div>
+        <div class="menu-desc">사진을 올려요</div>
+      </div>
+      <div class="menu-card diary" onclick="goScreen('uploadScreen','diary')">
+        <div class="menu-icon">日</div>
+        <div class="menu-title">일기 쓰기</div>
+        <div class="menu-desc">사진을 올려요</div>
+      </div>
+      <div class="menu-card book" onclick="goScreen('uploadScreen','book')">
+        <div class="menu-icon">書</div>
+        <div class="menu-title">독서록</div>
+        <div class="menu-desc">사진을 올려요</div>
+      </div>
+      <div class="menu-card textbook" onclick="goScreen('uploadScreen','textbook')">
+        <div class="menu-icon">册</div>
+        <div class="menu-title">교과서</div>
+        <div class="menu-desc">사진을 올려요</div>
+      </div>
+      <div class="menu-card vocab" onclick="goScreen('vocabMenuScreen')">
+        <div class="menu-icon">語</div>
+        <div class="menu-title">낱말 놀이</div>
+        <div class="menu-desc">게임으로 배워요</div>
+      </div>
+      <div class="menu-card record" onclick="goScreen('recordScreen'); loadMyRecords();">
+        <div class="menu-icon">★</div>
+        <div class="menu-title">내 기록</div>
+        <div class="menu-desc">받은 별 보기</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 사진 업로드 화면 -->
+  <div class="screen" id="uploadScreen">
+    <button class="back-btn" onclick="goScreen('homeScreen')">← 돌아가기</button>
+    <div class="screen-title" id="uploadTitle">사진 올리기</div>
+    <div class="screen-subtitle" id="uploadSubtitle">잘 쓴 글씨를 자랑해요!</div>
+
+    <div class="upload-card">
+      <div class="form-field" id="topicField">
+        <label>오늘 주제는?</label>
+        <input type="text" id="uploadTopic" placeholder="예: 즐거웠던 일">
+      </div>
+      <div class="form-field" id="roundField" style="display:none;">
+        <label>몇 회 받아쓰기?</label>
+        <input type="number" id="uploadRound" placeholder="예: 5" min="1">
+      </div>
+
+      <div class="camera-area" onclick="document.getElementById('photoInput').click()">
+        <input type="file" id="photoInput" accept="image/*" capture="environment" onchange="onPhotoSelected(event)">
+        <div id="cameraDisplay">
+          <div class="camera-icon">📷</div>
+          <div class="camera-text">사진을 찍거나 골라요</div>
+          <div class="camera-hint">잘 보이게 똑바로 찍어요</div>
+        </div>
+      </div>
+
+      <button class="big-button green" id="submitBtn" onclick="submitPhoto()" disabled>
+        다 됐어요! 보내기
+      </button>
+    </div>
+
+    <div class="success-screen" id="uploadSuccess">
+      <div class="success-icon">○</div>
+      <div class="success-title">잘했어요!</div>
+      <div class="success-message">선생님이 곧 봐주실 거예요</div>
+      <div class="stars-earned">★ +1</div>
+      <button class="big-button sky" onclick="goScreen('homeScreen'); resetUpload();">홈으로</button>
+    </div>
+  </div>
+
+  <!-- 어휘 게임 메뉴 -->
+  <div class="screen" id="vocabMenuScreen">
+    <button class="back-btn" onclick="goScreen('homeScreen')">← 돌아가기</button>
+    <div class="screen-title">낱말 놀이</div>
+    <div class="screen-subtitle">어떤 놀이를 해볼까요?</div>
+
+    <div class="vocab-menu">
+      <div class="vocab-game-card g1" onclick="startVocabGame('meaning')">
+        <div class="vocab-game-icon">意</div>
+        <div class="vocab-game-info">
+          <div class="vocab-game-title">낱말 뜻 맞히기</div>
+          <div class="vocab-game-desc">교과서 낱말의 뜻을 골라요</div>
+        </div>
+        <div class="vocab-game-arrow">→</div>
+      </div>
+      <div class="vocab-game-card g2" onclick="startVocabGame('synonym')">
+        <div class="vocab-game-icon">類</div>
+        <div class="vocab-game-info">
+          <div class="vocab-game-title">비슷한말 · 반대말</div>
+          <div class="vocab-game-desc">짝꿍 낱말을 찾아요</div>
+        </div>
+        <div class="vocab-game-arrow">→</div>
+      </div>
+      <div class="vocab-game-card g3" onclick="startVocabGame('blank')">
+        <div class="vocab-game-icon">填</div>
+        <div class="vocab-game-info">
+          <div class="vocab-game-title">빈칸 채우기</div>
+          <div class="vocab-game-desc">알맞은 낱말을 골라요</div>
+        </div>
+        <div class="vocab-game-arrow">→</div>
+      </div>
+      <div class="vocab-game-card g4" onclick="startVocabGame('sentence')">
+        <div class="vocab-game-icon">作</div>
+        <div class="vocab-game-info">
+          <div class="vocab-game-title">문장 만들기</div>
+          <div class="vocab-game-desc">낱말로 문장을 만들어요</div>
+        </div>
+        <div class="vocab-game-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 어휘 게임 진행 -->
+  <div class="screen" id="vocabPlayScreen">
+    <button class="back-btn" onclick="if(confirm('정말 그만할래요?')) goScreen('vocabMenuScreen')">← 그만하기</button>
+
+    <div class="game-progress">
+      <div class="game-counter"><span id="gameQNum">1</span> / <span id="gameQTotal">10</span></div>
+      <div class="game-score">★ <span id="gameScore">0</span></div>
+    </div>
+
+    <div class="question-card" id="questionCard">
+      <div class="question-label" id="questionLabel">낱말의 뜻을 골라요</div>
+      <div class="question-text" id="questionText">─</div>
+      <div class="question-hint" id="questionHint" style="display:none;"></div>
+    </div>
+
+    <div class="choices" id="choicesArea"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- 게임 결과 -->
+  <div class="screen" id="vocabResultScreen">
+    <div class="success-screen active" style="margin-top: 40px;">
+      <div class="success-icon" id="resultIcon">○</div>
+      <div class="success-title" id="resultTitle">잘했어요!</div>
+      <div class="success-message" id="resultMessage">─</div>
+      <div class="stars-earned" id="resultStars">★ ★ ★</div>
+      <button class="big-button green" onclick="goScreen('vocabMenuScreen')">다른 놀이 하기</button>
+      <button class="big-button sky" style="margin-top:8px;" onclick="goScreen('homeScreen')">홈으로</button>
+    </div>
+  </div>
+
+  <!-- 내 기록 -->
+  <div class="screen" id="recordScreen">
+    <button class="back-btn" onclick="goScreen('homeScreen')">← 돌아가기</button>
+    <div class="screen-title">내 공부 기록</div>
+    <div class="screen-subtitle">내가 한 것들을 모아봐요</div>
+
+    <div id="recordContent">
+      <div class="loading">기록을 불러오는 중</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============== 설정 (교사가 입력) ============== */
+const SCRIPT_URL = localStorage.getItem('hangulsam_script_url') || ''; // Apps Script URL
+
+/* ============== 학생 데이터 ============== */
+let currentStudent = null;
+let currentUploadType = '';
+let selectedPhoto = null;
+let totalStars = 0;
+
+/* ============== 어휘 데이터 (2학년 교과서 기반) ============== */
+const VOCAB_DATA = {
+  meaning: [
+    { word: '뉘우치다', correct: '잘못을 깨닫고 마음 아파하다', wrong: ['갑자기 화를 내다', '몰래 숨어서 보다', '빠르게 달리다'] },
+    { word: '뽐내다', correct: '잘난 척하며 자랑하다', wrong: ['조용히 있다', '깊이 생각하다', '천천히 걷다'] },
+    { word: '망설이다', correct: '결정을 못하고 머뭇거리다', wrong: ['크게 웃다', '빨리 달리다', '깊이 잠들다'] },
+    { word: '소중하다', correct: '매우 귀하고 중요하다', wrong: ['매우 작다', '매우 시끄럽다', '매우 멀다'] },
+    { word: '두근거리다', correct: '심장이 빨리 뛰다', wrong: ['배가 고프다', '잠이 오다', '목이 마르다'] },
+    { word: '북적이다', correct: '사람이 많아 시끌벅적하다', wrong: ['조용하고 한가롭다', '깜깜하고 무섭다', '맑고 깨끗하다'] },
+    { word: '깨닫다', correct: '몰랐던 것을 새로 알게 되다', wrong: ['깊이 잠들다', '큰 소리로 외치다', '천천히 걷다'] },
+    { word: '아쉽다', correct: '뭔가 모자라서 안타깝다', wrong: ['배가 부르다', '몸이 가볍다', '날씨가 덥다'] },
+    { word: '용기', correct: '두려움을 이겨내는 마음', wrong: ['화가 나는 마음', '슬픈 마음', '졸린 마음'] },
+    { word: '배려', correct: '상대를 생각해서 도와주는 마음', wrong: ['빠르게 달리는 일', '큰 소리로 말하는 일', '높이 뛰는 일'] }
+  ],
+  synonym: [
+    { word: '기쁘다', type: '비슷한말', correct: '즐겁다', wrong: ['슬프다', '아프다', '무섭다'] },
+    { word: '예쁘다', type: '비슷한말', correct: '아름답다', wrong: ['못생기다', '시끄럽다', '뜨겁다'] },
+    { word: '크다', type: '반대말', correct: '작다', wrong: ['길다', '높다', '많다'] },
+    { word: '빠르다', type: '반대말', correct: '느리다', wrong: ['굵다', '가볍다', '작다'] },
+    { word: '뜨겁다', type: '반대말', correct: '차갑다', wrong: ['시원하다', '단단하다', '부드럽다'] },
+    { word: '맛있다', type: '비슷한말', correct: '맛나다', wrong: ['맛없다', '시끄럽다', '뜨겁다'] },
+    { word: '많다', type: '반대말', correct: '적다', wrong: ['길다', '깊다', '높다'] },
+    { word: '깨끗하다', type: '반대말', correct: '더럽다', wrong: ['크다', '시끄럽다', '무겁다'] },
+    { word: '높다', type: '반대말', correct: '낮다', wrong: ['작다', '가볍다', '얇다'] },
+    { word: '튼튼하다', type: '비슷한말', correct: '단단하다', wrong: ['약하다', '부드럽다', '둥글다'] }
+  ],
+  blank: [
+    { sentence: '오늘은 비가 와서 우산을 ____.', correct: '썼다', wrong: ['먹었다', '잤다', '뛰었다'] },
+    { sentence: '엄마가 만들어 주신 떡볶이는 정말 ____.', correct: '맛있다', wrong: ['시끄럽다', '무겁다', '느리다'] },
+    { sentence: '도서관에서는 조용히 ____ 한다.', correct: '있어야', wrong: ['뛰어야', '먹어야', '울어야'] },
+    { sentence: '운동장에서 친구들과 즐겁게 ____.', correct: '놀았다', wrong: ['잤다', '울었다', '먹혔다'] },
+    { sentence: '겨울에는 눈이 ____ 내린다.', correct: '많이', wrong: ['뜨겁게', '시끄럽게', '천천히 빨리'] },
+    { sentence: '책을 읽으면 새로운 것을 ____ 수 있다.', correct: '배울', wrong: ['먹을', '잘', '뛸'] },
+    { sentence: '횡단보도에서는 좌우를 잘 ____ 건넌다.', correct: '살피고', wrong: ['먹고', '자고', '뛰고'] },
+    { sentence: '꽃밭에서 아름다운 꽃 향기가 ____.', correct: '난다', wrong: ['들린다', '보인다', '먹는다'] },
+    { sentence: '친구가 넘어졌을 때 손을 ____ 일으켜 주었다.', correct: '잡고', wrong: ['먹고', '자고', '읽고'] },
+    { sentence: '가을이 되면 나뭇잎이 빨갛게 ____.', correct: '물든다', wrong: ['녹는다', '날아간다 사라진다', '커진다'] }
+  ],
+  sentence: [
+    { word: '학교', hint: '"학교"라는 낱말을 넣어 짧은 문장을 만들어요!', correct: '학교에 갑니다', alternates: ['학교가', '학교는', '학교를', '학교에서'] },
+    { word: '친구', hint: '"친구"라는 낱말을 넣어 짧은 문장을 만들어요!', correct: '친구와 놀아요', alternates: ['친구가', '친구는', '친구를', '친구에게'] },
+    { word: '책', hint: '"책"이라는 낱말을 넣어 짧은 문장을 만들어요!', correct: '책을 읽습니다', alternates: ['책이', '책은', '책을', '책에서'] },
+    { word: '엄마', hint: '"엄마"라는 낱말을 넣어 짧은 문장을 만들어요!', correct: '엄마가 좋아요', alternates: ['엄마는', '엄마와', '엄마를'] },
+    { word: '꽃', hint: '"꽃"이라는 낱말을 넣어 짧은 문장을 만들어요!', correct: '꽃이 예뻐요', alternates: ['꽃을', '꽃은', '꽃에'] }
+  ]
+};
+
+/* ============== 로그인 ============== */
+async function doLogin() {
+  const num = document.getElementById('loginNumber').value.trim();
+  const name = document.getElementById('loginName').value.trim();
+  const errBox = document.getElementById('loginError');
+
+  if (!num || !name) {
+    errBox.textContent = '번호와 이름을 모두 적어주세요!';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  // SCRIPT_URL이 없으면 데모 모드로 진행
+  if (!SCRIPT_URL) {
+    currentStudent = { id: `demo-${num}`, name, num: parseInt(num), grade: 2, cls: 1 };
+    enterApp();
+    return;
+  }
+
+  errBox.style.display = 'none';
+  errBox.textContent = '확인하는 중...';
+  errBox.style.background = 'var(--sky)';
+  errBox.style.display = 'block';
+
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'verify_student', name, number: num })
+    });
+    const data = await res.json();
+    if (data.success) {
+      currentStudent = data.student;
+      enterApp();
+    } else {
+      errBox.textContent = data.error || '학생을 찾지 못했어요. 선생님께 물어보세요.';
+      errBox.style.background = 'var(--pink)';
+    }
+  } catch(e) {
+    // 오프라인이면 데모 모드로 진행
+    currentStudent = { id: `local-${num}`, name, num: parseInt(num), grade: 2, cls: 1 };
+    enterApp();
+  }
+}
+
+function enterApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('userName').textContent = currentStudent.name + ' 친구';
+  document.getElementById('userAvatar').textContent = currentStudent.name.charAt(0);
+
+  // 별 개수 로컬에서 불러오기
+  const savedStars = localStorage.getItem(`stars_${currentStudent.id}`);
+  totalStars = savedStars ? parseInt(savedStars) : 0;
+  document.getElementById('starCount').textContent = totalStars;
+
+  // 시간대별 인사
+  const h = new Date().getHours();
+  const greetings = h < 12
+    ? { emoji: '☀', text: '좋은 아침이에요!' }
+    : h < 18
+    ? { emoji: '◐', text: '오늘 점심은 맛있었나요?' }
+    : { emoji: '★', text: '오늘 하루 수고했어요!' };
+  document.getElementById('welcomeEmoji').textContent = greetings.emoji;
+  document.getElementById('welcomeText').textContent = greetings.text;
+
+  // 학생 정보 저장
+  localStorage.setItem('hangulsam_student', JSON.stringify(currentStudent));
+}
+
+function logout() {
+  if (!confirm('공부방에서 나갈래요?')) return;
+  localStorage.removeItem('hangulsam_student');
+  currentStudent = null;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('loginNumber').value = '';
+  document.getElementById('loginName').value = '';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+/* ============== 화면 전환 ============== */
+function goScreen(id, type) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  if (id === 'uploadScreen' && type) {
+    currentUploadType = type;
+    const titles = {
+      dictation: { t: '받아쓰기 사진', s: '받아쓴 종이를 사진으로 찍어요' },
+      diary: { t: '오늘 일기', s: '오늘 쓴 일기를 사진으로 찍어요' },
+      book: { t: '독서록', s: '독서록을 사진으로 찍어요' },
+      textbook: { t: '교과서 쓰기', s: '교과서에 쓴 부분을 찍어요' }
+    };
+    document.getElementById('uploadTitle').textContent = titles[type].t;
+    document.getElementById('uploadSubtitle').textContent = titles[type].s;
+    document.getElementById('roundField').style.display = type === 'dictation' ? 'block' : 'none';
+    document.getElementById('topicField').style.display = type === 'dictation' ? 'none' : 'block';
+    document.getElementById('uploadSuccess').classList.remove('active');
+    document.querySelector('.upload-card').style.display = 'block';
+  }
+  window.scrollTo(0, 0);
+}
+
+/* ============== 사진 업로드 ============== */
+function onPhotoSelected(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    selectedPhoto = { base64: ev.target.result, name: file.name, type: file.type, size: file.size };
+    const display = document.getElementById('cameraDisplay');
+    display.innerHTML = `<img src="${ev.target.result}" class="photo-preview" alt="찍은 사진">
+      <div class="photo-info">○ 사진 준비 완료!</div>`;
+    display.parentElement.classList.add('has-photo');
+    document.getElementById('submitBtn').disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitPhoto() {
+  if (!selectedPhoto) { alert('먼저 사진을 찍어주세요!'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '보내는 중...';
+
+  const payload = {
+    action: 'upload_photo',
+    studentId: currentStudent.id,
+    studentName: currentStudent.name,
+    type: currentUploadType,
+    topic: document.getElementById('uploadTopic').value || '',
+    round: document.getElementById('uploadRound').value || '',
+    base64: selectedPhoto.base64,
+    mimeType: selectedPhoto.type,
+    fileName: `${currentStudent.name}_${currentUploadType}_${Date.now()}.jpg`
+  };
+
+  let success = false;
+  if (SCRIPT_URL) {
+    try {
+      const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const data = await res.json();
+      success = data.success;
+    } catch(e) {
+      console.warn('업로드 실패, 로컬 저장으로 대체', e);
+    }
+  }
+
+  // 로컬 백업 저장
+  const localUploads = JSON.parse(localStorage.getItem(`uploads_${currentStudent.id}`) || '[]');
+  localUploads.push({
+    type: currentUploadType, date: new Date().toLocaleDateString('ko-KR'),
+    topic: payload.topic, round: payload.round, synced: success
+  });
+  localStorage.setItem(`uploads_${currentStudent.id}`, JSON.stringify(localUploads));
+
+  // 별 1개 추가
+  totalStars += 1;
+  localStorage.setItem(`stars_${currentStudent.id}`, totalStars);
+  document.getElementById('starCount').textContent = totalStars;
+
+  // 성공 화면
+  document.querySelector('.upload-card').style.display = 'none';
+  document.getElementById('uploadSuccess').classList.add('active');
+  btn.disabled = false;
+  btn.textContent = '다 됐어요! 보내기';
+}
+
+function resetUpload() {
+  selectedPhoto = null;
+  document.getElementById('uploadTopic').value = '';
+  document.getElementById('uploadRound').value = '';
+  document.getElementById('photoInput').value = '';
+  document.getElementById('cameraDisplay').innerHTML = `
+    <div class="camera-icon">📷</div>
+    <div class="camera-text">사진을 찍거나 골라요</div>
+    <div class="camera-hint">잘 보이게 똑바로 찍어요</div>`;
+  document.querySelector('.camera-area').classList.remove('has-photo');
+  document.getElementById('submitBtn').disabled = true;
+}
+
+/* ============== 어휘 게임 ============== */
+let gameState = null;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startVocabGame(type) {
+  const data = VOCAB_DATA[type];
+  if (!data) return;
+  const total = Math.min(5, data.length);
+  gameState = {
+    type, total, current: 0, score: 0, stars: 0,
+    questions: shuffle(data).slice(0, total)
+  };
+  goScreen('vocabPlayScreen');
+  document.getElementById('gameQTotal').textContent = total;
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = gameState.questions[gameState.current];
+  document.getElementById('gameQNum').textContent = gameState.current + 1;
+  document.getElementById('gameScore').textContent = gameState.score;
+  document.getElementById('feedback').classList.remove('show');
+
+  const labels = {
+    meaning: '낱말의 뜻을 골라요',
+    synonym: q.type === '비슷한말' ? '비슷한 뜻의 낱말을 골라요' : '반대 뜻의 낱말을 골라요',
+    blank: '빈칸에 알맞은 낱말을 골라요',
+    sentence: '낱말을 넣어 문장을 만들어요'
+  };
+  document.getElementById('questionLabel').textContent = labels[gameState.type];
+
+  if (gameState.type === 'sentence') {
+    document.getElementById('questionText').textContent = '"' + q.word + '"';
+    document.getElementById('questionHint').textContent = q.hint;
+    document.getElementById('questionHint').style.display = 'inline-block';
+    showSentenceInput(q);
+  } else if (gameState.type === 'blank') {
+    document.getElementById('questionText').innerHTML = q.sentence.replace('____', '<span style="color:var(--pink-deep);">○○○</span>');
+    document.getElementById('questionHint').style.display = 'none';
+    showChoices(q);
+  } else {
+    document.getElementById('questionText').textContent = q.word;
+    document.getElementById('questionHint').style.display = 'none';
+    showChoices(q);
+  }
+}
+
+function showChoices(q) {
+  const all = shuffle([q.correct, ...q.wrong]);
+  const area = document.getElementById('choicesArea');
+  area.innerHTML = all.map(choice =>
+    `<button class="choice-btn" onclick="checkAnswer(this, '${choice.replace(/'/g, "\\'")}', '${q.correct.replace(/'/g, "\\'")}')">${choice}</button>`
+  ).join('');
+}
+
+function showSentenceInput(q) {
+  const area = document.getElementById('choicesArea');
+  area.innerHTML = `
+    <div style="background:white; padding:16px; border-radius:14px; border:3px solid var(--sky-light);">
+      <input type="text" id="sentenceInput" placeholder="여기에 문장을 적어요"
+        style="width:100%; padding:14px; border:2px solid var(--sky-light); border-radius:12px; font-family:'Gowun Dodum'; font-size:18px; background:var(--paper); margin-bottom:10px;">
+      <button class="big-button green" onclick="checkSentence('${q.word}', '${(q.alternates || []).join(',')}')">제출하기</button>
+    </div>`;
+  setTimeout(() => document.getElementById('sentenceInput').focus(), 200);
+}
+
+function checkAnswer(btn, chosen, correct) {
+  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+  const isCorrect = chosen === correct;
+  if (isCorrect) {
+    btn.classList.add('correct');
+    gameState.score += 10;
+    gameState.stars++;
+    showFeedback(true);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+    showFeedback(false);
+  }
+}
+
+function checkSentence(word, alternates) {
+  const input = document.getElementById('sentenceInput').value.trim();
+  if (!input) { alert('문장을 적어주세요!'); return; }
+
+  // 유효성: 단어가 포함되어 있고, 문장이 5자 이상
+  const words = (alternates || '').split(',').filter(Boolean);
+  const hasWord = input.includes(word) || words.some(w => input.includes(w));
+  const isLong = input.length >= 5;
+  const isCorrect = hasWord && isLong;
+
+  if (isCorrect) {
+    gameState.score += 10;
+    gameState.stars++;
+    showFeedback(true, '잘 썼어요! "' + input + '"');
+  } else {
+    showFeedback(false, hasWord ? '문장이 너무 짧아요' : `"${word}"라는 낱말이 들어가야 해요!`);
+  }
+}
+
+function showFeedback(isCorrect, customText) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.textContent = customText || (isCorrect ? '○ 정답이에요!' : '× 다음에 잘해요!');
+  setTimeout(nextQuestion, 1500);
+}
+
+function nextQuestion() {
+  gameState.current++;
+  if (gameState.current >= gameState.total) {
+    finishGame();
+  } else {
+    showQuestion();
+  }
+}
+
+async function finishGame() {
+  goScreen('vocabResultScreen');
+  const rate = Math.round(gameState.stars / gameState.total * 100);
+  let icon, title, msg;
+  if (rate === 100) { icon = '★'; title = '완벽해요!'; msg = '모두 다 맞혔어요!'; }
+  else if (rate >= 80) { icon = '◎'; title = '아주 잘했어요!'; msg = '정말 멋져요!'; }
+  else if (rate >= 60) { icon = '○'; title = '잘했어요!'; msg = '조금만 더 연습해봐요!'; }
+  else { icon = '△'; title = '괜찮아요!'; msg = '다음에는 더 잘할 수 있어요!'; }
+
+  document.getElementById('resultIcon').textContent = icon;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMessage').textContent = `${gameState.total}문제 중 ${gameState.stars}개 맞혔어요. ${msg}`;
+  document.getElementById('resultStars').textContent = '★'.repeat(gameState.stars) + '☆'.repeat(gameState.total - gameState.stars);
+
+  // 별 추가
+  totalStars += gameState.stars;
+  localStorage.setItem(`stars_${currentStudent.id}`, totalStars);
+  document.getElementById('starCount').textContent = totalStars;
+
+  // 시트로 전송
+  if (SCRIPT_URL) {
+    try {
+      await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({
+        action: 'save_vocab',
+        studentId: currentStudent.id,
+        studentName: currentStudent.name,
+        gameType: gameState.type,
+        total: gameState.total,
+        correct: gameState.stars,
+        stars: gameState.stars
+      })});
+    } catch(e) { console.warn('어휘 점수 전송 실패', e); }
+  }
+
+  // 로컬 백업
+  const localVocabs = JSON.parse(localStorage.getItem(`vocabs_${currentStudent.id}`) || '[]');
+  localVocabs.push({
+    date: new Date().toLocaleDateString('ko-KR'),
+    type: gameState.type, total: gameState.total, correct: gameState.stars
+  });
+  localStorage.setItem(`vocabs_${currentStudent.id}`, JSON.stringify(localVocabs));
+}
+
+/* ============== 내 기록 ============== */
+async function loadMyRecords() {
+  const div = document.getElementById('recordContent');
+  div.innerHTML = '<div class="loading">기록을 불러오는 중</div>';
+
+  let dictCount = 0, writeCount = 0, vocabCount = 0;
+  let recentItems = [];
+
+  // 시트에서 데이터 가져오기
+  if (SCRIPT_URL) {
+    try {
+      const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({
+        action: 'get_student_data', studentId: currentStudent.id
+      })});
+      const data = await res.json();
+      if (data.success) {
+        dictCount = data.data.dictations.length;
+        writeCount = data.data.writings.length;
+        vocabCount = data.data.vocabs.length;
+        data.data.dictations.forEach(d => recentItems.push({
+          icon: '字', title: `받아쓰기 ${d.round || ''}회`, date: d.date, stars: '★'
+        }));
+        data.data.writings.forEach(w => recentItems.push({
+          icon: w.type === 'diary' ? '日' : w.type === 'book' ? '書' : '册',
+          title: w.topic || (w.type === 'diary' ? '일기' : '글쓰기'),
+          date: w.date, stars: '★'
+        }));
+        data.data.vocabs.forEach(v => recentItems.push({
+          icon: '語', title: `낱말 놀이 (${v.correct}/${v.total})`,
+          date: v.date, stars: '★'.repeat(v.stars || 0)
+        }));
+      }
+    } catch(e) { console.warn('기록 불러오기 실패', e); }
+  }
+
+  // 로컬 백업도 합치기
+  const localUploads = JSON.parse(localStorage.getItem(`uploads_${currentStudent.id}`) || '[]');
+  const localVocabs = JSON.parse(localStorage.getItem(`vocabs_${currentStudent.id}`) || '[]');
+  if (recentItems.length === 0) {
+    localUploads.forEach(u => {
+      if (u.type === 'dictation') dictCount++; else writeCount++;
+      recentItems.push({
+        icon: u.type === 'dictation' ? '字' : u.type === 'diary' ? '日' : u.type === 'book' ? '書' : '册',
+        title: u.topic || (u.type === 'dictation' ? `받아쓰기 ${u.round}회` : '글쓰기'),
+        date: u.date, stars: '★'
+      });
+    });
+    localVocabs.forEach(v => {
+      vocabCount++;
+      recentItems.push({
+        icon: '語', title: `낱말 놀이 (${v.correct}/${v.total})`,
+        date: v.date, stars: '★'.repeat(v.correct)
+      });
+    });
+  }
+
+  recentItems.reverse();
+
+  let html = `<div class="record-stats">
+    <div class="record-stat gold"><div class="record-stat-num">${totalStars}</div><div class="record-stat-label">받은 별</div></div>
+    <div class="record-stat pink"><div class="record-stat-num">${dictCount + writeCount}</div><div class="record-stat-label">올린 사진</div></div>
+    <div class="record-stat grass"><div class="record-stat-num">${vocabCount}</div><div class="record-stat-label">낱말 놀이</div></div>
+  </div>`;
+
+  if (recentItems.length === 0) {
+    html += `<div class="empty-record">
+      <div class="empty-record-icon">○</div>
+      <div style="font-family:'Jua'; font-size:18px; margin-bottom:6px;">아직 기록이 없어요</div>
+      <div style="font-size:14px;">사진을 올리거나 낱말 놀이를 해보세요!</div>
+    </div>`;
+  } else {
+    html += '<div style="font-family:\'Jua\'; font-size:18px; margin-bottom:12px;">최근 한 일</div>';
+    recentItems.slice(0, 15).forEach(it => {
+      html += `<div class="record-card">
+        <div class="record-icon">${it.icon}</div>
+        <div class="record-info">
+          <div class="record-title">${it.title}</div>
+          <div class="record-meta">${it.date}</div>
+        </div>
+        <div class="record-stars">${it.stars}</div>
+      </div>`;
+    });
+  }
+
+  div.innerHTML = html;
+}
+
+/* ============== 자동 로그인 ============== */
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('hangulsam_student');
+  if (saved) {
+    try {
+      currentStudent = JSON.parse(saved);
+      enterApp();
+    } catch(e) { /* 무시 */ }
+  }
+
+  if (!SCRIPT_URL) {
+    console.warn('SCRIPT_URL이 설정되지 않았습니다. 설정 방법은 SETUP.md를 참고하세요.');
+  }
+});
+</script>
+</body>
+</html>
